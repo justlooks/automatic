@@ -18,6 +18,8 @@ zookeeper-server:
        synclimit: {{pillar['synclimit']}}
        datadir: {{pillar['datadir']}}
        clientport: {{pillar['clientport']}}
+       snapretaincnt: {{pillar['snapretaincnt']}}
+       purgeintervalhour: {{pillar['purgeintervalhour']}}
 
 service zookeeper-server init --myid={% for i in pillar['cluster'] %}{% set judge = i.split(':')[-1] %}{% if judge == grains['ip_interfaces'][pillar['interface']][0] %}{{i.split(':')[0]}}{% endif %}{% endfor %}:
   cmd.run:
