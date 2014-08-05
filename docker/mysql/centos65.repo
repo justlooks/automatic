@@ -1,0 +1,6 @@
+[centos65]
+name=CentOS-6.5 - Base repo
+baseurl=ftp://192.168.10.207/centos6_5
+gpgcheck=0
+enabled=1
+
