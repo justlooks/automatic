@@ -1,0 +1,27 @@
+/data/mysql/{{ hostname }}.err {
+        daily
+        ifempty
+        copytruncate
+        compress
+        delaycompress
+        rotate 4
+        missingok
+        dateext
+        postrotate
+            /bin/mv /data/mysql/{{ hostname }}.err-$(date +%Y%m%d) /data/mysql/{{ hostname }}.err-$(date +%Y%m%d -d '1 day ago')
+        endscript
+}
+
+/data/mysql/{{ hostname }}-slow.log {
+        daily
+        ifempty
+        copytruncate
+        compress
+        delaycompress
+        rotate 4
+        missingok
+        dateext
+        postrotate
+            /bin/mv /data/mysql/{{ hostname }}-slow.log-$(date +%Y%m%d) /data/mysql/{{ hostname }}-slow.log-$(date +%Y%m%d -d '1 day ago')
+        endscript
+}
