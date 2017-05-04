@@ -1,0 +1,3 @@
+参数说明
+MYSQL_SLOWLOG      mysql满查询文件名
+MYSQL_POOLSIZE     mysql innodb pool大小

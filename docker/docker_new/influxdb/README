@@ -1,0 +1,3 @@
+参数说明
+INFLUXDB_DATADIR       influxdb数据存储目录
+INFLUXDB_INITDB        influxdb初始化数据库名
