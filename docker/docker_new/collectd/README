@@ -1,5 +1,6 @@
 参数说明
-INFLUXDB_IP      influxdb的服务地址
+INFLUXDB_IP          influxdb的服务地址
+MONITOR_HOSTNAME     本机的hostname,这个值在influxdb中标注数据的来源
 
 collectd.d目录存放额外的插件配置信息
 app_plugins目录存放所需的插件模块代码
