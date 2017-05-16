@@ -1,3 +1,11 @@
 参数说明
 MYSQL_SLOWLOG/testme.log      mysql满查询文件名
 MYSQL_POOLSIZE/512M           mysql innodb pool大小
+MYSQL_ROOT_PASSWORD	      mysql root 密码（此选项必填）
+MYSQL_USER		      mysql初始普通用户（一般设置为监控用户）
+MYSQL_PASSWD		      mysql初始普通用户密码
+MYSQL_USERIP		      mysql初始普通用户来源ip
+MYSQL_USER_SCHEMA	      mysql初始普通用户schema权限（可以设置为*)
+
+
+注意 ： 数据初始化的脚本不应该集成在entrypoint文件中，因为如果初始数据比较多会导致启动时间过长
