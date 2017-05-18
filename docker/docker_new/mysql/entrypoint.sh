@@ -9,10 +9,14 @@ _get_config() {
 
 }
 
-CFGFILE="/etc/my.cnf"
+CFGFILE1="/etc/my.cnf"
+CFGFILE2="/opt/collectd/etc/collectd.conf"
 
-sed -i "/^slow-query-log-file/s/=.*/= ${MYSQL_SLOWLOG}/" ${CFGFILE}
-sed -i "/^innodb_buffer_pool_size/s/=.*/= ${MYSQL_POOLSIZE}/" ${CFGFILE}
+sed -i "/^slow-query-log-file/s/=.*/= ${MYSQL_SLOWLOG}/" ${CFGFILE1}
+sed -i "/^innodb_buffer_pool_size/s/=.*/= ${MYSQL_POOLSIZE}/" ${CFGFILE1}
+
+sed -i "/Server/s#[0-9.]\+#${INFLUXDB_IP}#" ${CFGFILE2}
+sed -i "/Hostname/s#localhost#${MONITOR_HOSTNAME}#" ${CFGFILE2}
 
 if [ ! ${MYSQL_ROOT_PASSWORD} ];then
         echo "you should set the root password";exit 1
@@ -52,7 +56,17 @@ mysql -uroot -S/tmp/mysql.sock <<-EOSQL
 EOSQL
 
 echo "set .bashrc"
-echo -e 'alias my3306=\047mysql -uroot -p${MYSQL_ROOT_PASSWORD} -S/tmp/mysql.sock --prompt="\u@\h:\d \\r:\m:\s>"\047' >> ~/.bashrc
+echo -e 'alias my3306=\047mysql -uroot -p'${MYSQL_ROOT_PASSWORD}' -S/tmp/mysql.sock --prompt="\u@\h:\d \\r:\m:\s>"\047' >> ~/.bashrc
+
+echo "add monitor account"
+echo "CREATE USER 'collectd'@'localhost' IDENTIFIED BY '123456';GRANT ALL ON *.* TO 'collectd'@'localhost'" | mysql -uroot -S/tmp/mysql.sock -p${MYSQL_ROOT_PASSWORD}
+
+/opt/collectd/sbin/collectd -C /opt/collectd/etc/collectd.conf -f
+status=$?
+if [ $status -ne 0 ]; then
+  echo "Failed to start my_first_process: $status"
+  exit $status
+fi
 
 if [ "${MYSQL_USER}" -a "${MYSQL_PASSWD}" -a "${MYSQL_USERIP}" ];then
         echo "CREATE USER '${MYSQL_USER}'@'${MYSQL_USERIP}' IDENTIFIED BY '${MYSQL_PASSWD}';" | mysql -uroot -S/tmp/mysql.sock -p${MYSQL_ROOT_PASSWORD}
@@ -70,7 +84,6 @@ fi
 echo "now run the database"
 mysqld --user=mysql
 
-
 # MYSQL_ROOT_PASSWORD     强制选项
 # MYSQL_USER
 # MYSQL_PASSWD
@@ -78,3 +91,5 @@ mysqld --user=mysql
 # MYSQL_USER_SCHEMA    值为*表示对所有schema授权
 # MYSQL_SLOWLOG
 # MYSQL_POOLSIZE
+# INFLUXDB_IP             强制选项
+# MONITOR_HOSTNAME        强制选项

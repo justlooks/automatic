@@ -9,3 +9,10 @@ MYSQL_USER_SCHEMA	      mysql初始普通用户schema权限（可以设置为*)
 
 
 注意 ： 数据初始化的脚本不应该集成在entrypoint文件中，因为如果初始数据比较多会导致启动时间过长
+
+
+collectd目录放置本应用程序的相关collectd配置,以及应用程序相关的collectd的type.db定义文件
+plugin目录下存放的是相关的collectd监控代码插件
+
+在集群上启动服务
+docker service create -e MYSQL_ROOT_PASSWORD="12345" -e INFLUXDB_IP="172.16.20.5" -e MONITOR_HOSTNAME="mysqltest" --name mysqltest --network my-net  -t localhost:5000/mysql:5.7.12
