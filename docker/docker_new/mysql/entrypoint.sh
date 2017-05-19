@@ -11,12 +11,15 @@ _get_config() {
 
 CFGFILE1="/etc/my.cnf"
 CFGFILE2="/opt/collectd/etc/collectd.conf"
+MODEFILE="/opt/collectd/var/lib/collectd/Collectd/Plugins/Momysql.pm"
 
 sed -i "/^slow-query-log-file/s/=.*/= ${MYSQL_SLOWLOG}/" ${CFGFILE1}
 sed -i "/^innodb_buffer_pool_size/s/=.*/= ${MYSQL_POOLSIZE}/" ${CFGFILE1}
 
 sed -i "/Server/s#[0-9.]\+#${INFLUXDB_IP}#" ${CFGFILE2}
 sed -i "/Hostname/s#localhost#${MONITOR_HOSTNAME}#" ${CFGFILE2}
+
+sed -i "/\$vl->{'host'}/s#=\s.*;#= '"${MONITOR_HOSTNAME}"';#" ${MODEFILE}
 
 if [ ! ${MYSQL_ROOT_PASSWORD} ];then
         echo "you should set the root password";exit 1
