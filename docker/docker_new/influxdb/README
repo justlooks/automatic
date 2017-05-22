@@ -8,4 +8,6 @@ INFLUXDB_INITDB        influxdb初始化数据库名
 在集群上启动服务
 # docker service create --name myinfluxdb --network my-net -e INFLUXDB_DATADIR="/data" -e INFLUXDB_INITDB="collectd" influxdb
 
+influx -precision rfc3339
+
 
