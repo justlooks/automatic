@@ -7,6 +7,8 @@
 
 GF_HOMEDIR="/usr/share/grafana"
 
+grafana-cli plugins install grafana-piechart-panel
+
 /usr/sbin/grafana-server --homepath=${GF_HOMEDIR} --pidfile=/var/run/grafana-server.pid --config=/etc/grafana/grafana.ini cfg:default.log.mode='console' cfg:default.paths.data=${GF_DATADIR} cfg:default.paths.logs=${GF_LOGDIR} cfg:default.paths.plugins=${GF_PLUGINDIR} "$@"
 
 
