@@ -78,12 +78,6 @@ my @exclude_status = [
 
 # connect mysql database
 
-sub foobar_init
-{
-    plugin_log(Collectd::LOG_INFO, "start init...$db_info->{host}");
-    return 1;
-}
-
 # two level plugin xml
 # put var in collectd.conf into hash
 sub foobar_config
@@ -122,6 +116,47 @@ sub _fetch_mysql_status
 #        my $result = $sth->fetchall_hashref( [ qw(Variable_name Variable_value Type) ] );
 	my $result = $sth->fetchall_hashref( [ qw(Variable_name Value) ] );
         return $result;
+}
+
+sub _fetch_mysql_variable
+{
+        my $_dbh = shift;
+        my $sth = $_dbh->prepare("show global variables like 'innodb_buffer_pool_size'");
+        $sth->execute;
+        my $result = $sth->fetchall_hashref( [ qw(Variable_name Value) ] );
+        return $result;
+}
+
+sub foobar_init
+{
+    plugin_log(Collectd::LOG_INFO, "start init...$db_info->{host}");
+    $dbh = _getconn;
+    if($dbh){
+        plugin_log(Collectd::LOG_INFO, "read loop start...$sql_opts");
+        plugin_log(Collectd::LOG_INFO, $dbh);
+        my $result = _fetch_mysql_variable($dbh);
+        while(my ($key,$value) = each(%$result)) {
+                while(my ($ikey,$ivalue) = each(%$value)) {
+                $mstats->{$key} = $ikey;
+                if(!grep /^$key$/,@exclude_status) {
+                        my $vl = {};
+                        $vl->{'plugin'} = 'Momysql';
+                        $vl->{'type'} = 'testme';    # need write define in typedb (testme                  value:GAUGE:0:U)
+                        $vl->{'type_instance'} = $key;
+                        $vl->{'plugin_instance'} = 'variable';
+                        $vl->{'time'} = time();
+#                        $vl->{'interval'} = plugin_get_interval();
+                        $vl->{'host'} = $db_info->{host};
+                        $vl->{'values'} = [$ikey];
+                        plugin_dispatch_values($vl);
+                };
+            }
+        }
+                return 1;
+    }else{
+        plugin_log(Collectd::LOG_ERR, "no db connected,check config file plz!");
+        return 1;
+    }
 }
 
 sub foobar_read

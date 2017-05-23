@@ -50,6 +50,7 @@
   "annotations": {
     "list": []
   },
+  "editMode": false,
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
@@ -396,9 +397,15 @@
                 },
                 {
                   "condition": "AND",
+                  "key": "instance",
+                  "operator": "=",
+                  "value": "variable"
+                },
+                {
+                  "condition": "AND",
                   "key": "type_instance",
                   "operator": "=",
-                  "value": "Innodb_buffer_pool_bytes_data"
+                  "value": "innodb_buffer_pool_size"
                 }
               ]
             }
@@ -1827,5 +1834,5 @@
   },
   "timezone": "browser",
   "title": "mysql monitor",
-  "version": 29
+  "version": 31
 }
