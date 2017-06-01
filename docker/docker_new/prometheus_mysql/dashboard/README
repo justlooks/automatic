@@ -1,0 +1,11 @@
+监控内容
+information_schema.tables中的table_rows指标
+information_schema.table中的 table_size （计算值）
+
+schema的data+index的总和
+data_free中值最大的（碎片最多)
+
+percona和mariadb特有的，需要开启userstat功能
+row read最多的表
+row change最多的表
+
