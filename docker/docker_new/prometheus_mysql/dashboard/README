@@ -9,3 +9,10 @@ percona和mariadb特有的，需要开启userstat功能
 row read最多的表
 row change最多的表
 
+
+MySQL_InnoDB_Metrics.json
+删除原来的innodb change buffer/innodb change buffer activity
+Index Condition Pushdown/innodb deadlock/innodb checkpoint age 
+
+MySQL_Performance_Schema.json  对于performance schema metrics的监控,需要mysqld_exporter开启对应的选项
+MySQLOVERVIEW.json    对于mysql基本metrics的监控和系统metrics的监控
