@@ -1,0 +1,4 @@
+
+wget https://www.percona.com/downloads/Percona-Server-5.7/Percona-Server-5.7.18-15/binary/redhat/6/x86_64/Percona-Server-5.7.18-15-rbff2cd9-el6-x86_64-bundle.tar
+
+docker service create -e MYSQL_ROOT_PASSWORD="12345" -e MONITOR_HOSTNAME="perconatest" --name perconatest --network my-net  -t localhost:5000/prometheus_percona:5.7.18
